@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% if session.logged_in %}
+        <h2>Approve the Duo push</h2>
+        <script src="Duo-Web-v2.js"></script>
+            <script>
+                Duo.init({
+                'host': '{{ duohost }}',
+                'sig_request': '{{ sig_request }}',
+                'post_action': 'show_entries.html'
+                });
+            </script>
+    {% endif %}
+{% endblock %}

@@ -1,4 +1,6 @@
 import sqlite3
+import ConfigParser
+import duo_web as duo
 from contextlib import closing
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
@@ -6,12 +8,24 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 DATABASE = '/tmp/flaskr.db'
 DEBUG = True
 SECRET_KEY = 'dev key'
-USERNAME = 'admin'
+USERNAME = 'andrew'
 PASSWORD = 'default'
 
 # create flask application
 app = Flask(__name__)
 app.config.from_object(__name__)
+
+
+# config parser
+def grab_keys(filename='duo.conf'):
+    config = ConfigParser.RawConfigParser()
+    config.read(filename)
+    akey = config.get('duo', 'akey')
+    ikey = config.get('duo', 'ikey')
+    skey = config.get('duo', 'skey')
+    host = config.get('duo', 'host')
+    return {'akey': akey, 'ikey': ikey, 'skey': skey, 'host': host}
+
 
 # make a database connection
 def connect_db():
@@ -56,6 +70,15 @@ def add_entry():
     return redirect(url_for('show_entries'))
 
 
+@app.route('/mfa', methods=['GET', 'POST'])
+def mfa():
+    result = grab_keys()
+    sec = duo.sign_request(result['ikey'], result['skey'], result['akey'], "admin")
+    # This won't work - need to use cookie data to pass this along
+    # return render_template('duoframe.html'), duohost=duohost, sig_request=sig_request)
+    return render_template('duoframe.html')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -67,7 +90,7 @@ def login():
         else:
             session['logged_in'] = True
             flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            return redirect(url_for('mfa'))
     return render_template('login.html', error=error)
 
 
