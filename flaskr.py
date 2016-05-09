@@ -20,6 +20,7 @@ app.config.from_object(__name__)
 def grab_keys(filename='duo.conf'):
     config = ConfigParser.RawConfigParser()
     config.read(filename)
+
     akey = config.get('duo', 'akey')
     ikey = config.get('duo', 'ikey')
     skey = config.get('duo', 'skey')
@@ -74,9 +75,12 @@ def add_entry():
 def mfa():
     result = grab_keys()
     sec = duo.sign_request(result['ikey'], result['skey'], result['akey'], "admin")
-    # This won't work - need to use cookie data to pass this along
-    # return render_template('duoframe.html'), duohost=duohost, sig_request=sig_request)
-    return render_template('duoframe.html')
+    return render_template('duoframe.html', duohost=result['host'], sig_request=sec)
+
+
+@app.route('/Duo-Web-v2.js', methods=['GET'])
+def duoweb():
+    return "Duo-Web-v2.js"
 
 
 @app.route('/login', methods=['GET', 'POST'])
