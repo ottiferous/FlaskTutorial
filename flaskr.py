@@ -11,6 +11,7 @@ SECRET_KEY = 'dev key'
 USERNAME = 'andrew'
 PASSWORD = 'default'
 
+
 # create flask application
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -75,12 +76,12 @@ def add_entry():
 def mfa():
     result = grab_keys()
     sec = duo.sign_request(result['ikey'], result['skey'], result['akey'], "admin")
-    return render_template('duoframe.html', duohost=result['host'], sig_request=sec)
-
-
-@app.route('/Duo-Web-v2.js', methods=['GET'])
-def duoweb():
-    return "Duo-Web-v2.js"
+    if request.method == 'GET':
+        return render_template('duoframe.html', duohost=result['host'], sig_request=sec)
+    if request.method == 'POST':
+        user = duo.verify_response(result['ikey'], result['skey'], result['akey'], request.args.get('sig_response'))
+        if user:
+            return render_template(url_for('show_entries'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
