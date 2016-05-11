@@ -2,7 +2,8 @@
 {% block body %}
     {% if session.logged_in %}
         <h2>Approve the Duo push</h2>
-        <script type="text/javasript" src="{{ url_for('static', filename='Duo-Web-v2.js') }}"</script>
+        <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='Duo-Web-v2.js') }}"></script>
             <script>
                 Duo.init({
                 'host': '{{ duohost }}',
