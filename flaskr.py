@@ -81,7 +81,7 @@ def mfa():
     if request.method == 'POST':
         user = duo.verify_response(result['ikey'], result['skey'], result['akey'], request.args.get('sig_response'))
         if user:
-            return render_template(url_for('show_entries'))
+            return render_template(url_for('mfa'), user=user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
