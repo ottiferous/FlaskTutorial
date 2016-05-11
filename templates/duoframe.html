@@ -7,7 +7,8 @@
             <script>
                 Duo.init({
                 'host': '{{ duohost }}',
-                'sig_request': '{{ sig_request }}'
+                'sig_request': '{{ sig_request }}',
+                'post_action': '{{ url_for('success') }}'
                 });
             </script>
         <iframe id="duo_iframe" width="620" height="330" frameborder="0"></iframe>

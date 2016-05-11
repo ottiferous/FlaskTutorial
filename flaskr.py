@@ -84,6 +84,10 @@ def mfa():
             return render_template(url_for('mfa'), user=user)
 
 
+@app.route('/success', methods=['POST'])
+def success():
+    return "Success!"
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
