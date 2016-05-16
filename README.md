@@ -2,10 +2,16 @@
 
 ## Flaskr + DUO = 2FA your login
 
+---
+
 ## How to use
 Assuming you already have Flaskr setup just run ``` python flaskr.py ``` in the main directory of this repository.
 The application can be reached locally by navigating to the URL specified once Flask has been started.
 
+##About
+This is being used as a proof of concept for setting up 2FA on a basic web login.
+
+---
 
 ##Configuration files:
 
@@ -18,8 +24,8 @@ For example:
     [app]
     skey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-This will be read through ConfigParser() into a dictionary. The values can be access as
+This will be read through ConfigParser() into a dictionary. The values can be accessed as
 
-    `config.get('app','skey')`
+    config.get('app','skey')
 
-Which will return the value stored next to the skey value that is used to sign the login cookies.
+Which will return the value stored next to the `skey` value that is used to sign the login cookies.
