@@ -95,6 +95,7 @@ def mfa():
 def success():
     return "Success!: " + session['user']
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
