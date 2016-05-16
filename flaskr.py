@@ -8,7 +8,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 DATABASE = '/tmp/flaskr.db'
 DEBUG = True
 SECRET_KEY = 'dev key'
-USERNAME = 'andrew'
+USERNAME = ['andrew', 'testuser']
 PASSWORD = 'default'
 
 
@@ -27,6 +27,13 @@ def grab_keys(filename='duo.conf'):
     skey = config.get('duo', 'skey')
     host = config.get('duo', 'host')
     return {'akey': akey, 'ikey': ikey, 'skey': skey, 'host': host}
+
+
+# app-specific configs
+def app_config(filename='app.conf'):
+    config = ConfigParser.RawConfigParser()
+    config.read(filename)
+    return config.get('app', 'skey')
 
 
 # make a database connection
@@ -86,18 +93,17 @@ def mfa():
 
 @app.route('/success', methods=['POST'])
 def success():
-    return "Success!"
+    return "Success!: " + session['user']
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
+        if request.form['username'] not in USERNAME:
             error = 'Invalid Username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
         else:
             session['logged_in'] = True
+            session['user'] = request.form['username']
             flash('You were logged in')
             return redirect(url_for('mfa'))
     return render_template('login.html', error=error)
@@ -112,4 +118,5 @@ def logout():
 
 # main body
 if __name__ == '__main__':
+    app.secret_key = app_config('app.conf')
     app.run()
