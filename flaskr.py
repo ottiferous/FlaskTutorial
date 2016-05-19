@@ -82,18 +82,19 @@ def add_entry():
 @app.route('/mfa', methods=['GET', 'POST'])
 def mfa():
     result = grab_keys()
-    sec = duo.sign_request(result['ikey'], result['skey'], result['akey'], "admin")
+    sec = duo.sign_request(result['ikey'], result['skey'], result['akey'], session['user'])
     if request.method == 'GET':
         return render_template('duoframe.html', duohost=result['host'], sig_request=sec)
     if request.method == 'POST':
         user = duo.verify_response(result['ikey'], result['skey'], result['akey'], request.args.get('sig_response'))
-        if user:
+        if user == session['user']:
             return render_template(url_for('mfa'), user=user)
 
 
 @app.route('/success', methods=['POST'])
 def success():
-    return "Success!: " + session['user']
+    return redirect(url_for('show_entries'))
+    #return "Success!: " + session['user']
 
 
 @app.route('/login', methods=['GET', 'POST'])
