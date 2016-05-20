@@ -94,7 +94,6 @@ def mfa():
 @app.route('/success', methods=['POST'])
 def success():
     return redirect(url_for('show_entries'))
-    #return "Success!: " + session['user']
 
 
 @app.route('/login', methods=['GET', 'POST'])
