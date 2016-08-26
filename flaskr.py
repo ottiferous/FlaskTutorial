@@ -1,11 +1,10 @@
 import ConfigParser
 import duo_web as duo
 from contextlib import closing
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask import Flask, request, session, redirect, url_for, render_template, flash
 
 # config
 DEBUG = True
-SECRET_KEY = 'dev key'
 
 
 # create flask application
@@ -60,11 +59,11 @@ def login():
     error = None
     if request.method == 'POST':
         if request.form['username'] == "":
-            error = 'Invalid Username. Please type something.'
+            error = 'Type something in the username field.'
         else:
             session['logged_in'] = True
             session['user'] = request.form['username']
-            flash('You were logged in')
+            flash('You are logged in')
             return redirect(url_for('mfa'))
     return render_template('login.html', error=error)
 
