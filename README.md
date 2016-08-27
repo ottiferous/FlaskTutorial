@@ -1,33 +1,24 @@
-#Introduction
-
-## Flaskr + DUO = 2FA your login
+#Flaskr + DUO = 2FA your login
 
 ## How to use
-Assuming you already have Flaskr setup just run ``` python flaskr.py ``` in the main directory of this repository.
-Open a browser session to the URL specified by Flask. By default it is ```http://127.0.0.1:5000/```
-
-Please see the section on **Configuration Files** to setup your authentication keys. The
-
-##About
-This is being used as a proof of concept for setting up 2FA on a basic web login using Python.
+1. Install [Flask](http://flask.pocoo.org)
+2. Setup a Duo [WebDSK](https://duo.com/docs/duoweb) application
+3. Open up a command line and run ``` python flaskr.py ```
+4. Navigate your browser to ```http://127.0.0.1:5000/```
+5. Click 'Login'
 
 ##Configuration files:
 
-This application relies on two configuration files that follow the standard .ini format.
+This application relies on two configuration files that follow the standard .ini format. These variables are all read through `ConfigParser()` into a dictionary. 
 
-###app.conf:
+###app.conf
 ```
 ; My App configuration
 
 [app]
 skey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-The skey above should is used to sign the session cookie for login. It can be any alphanumeric string of 40 or greater.
-This will be read through ConfigParser() into a dictionary. The values can be accessed as
-
-    config.get('app','skey')
-
-Which will return the value stored next to the `skey` value that is used to sign the login cookies.
+The `skey` is the client-side session cookie for remembering you are logged in. it can be any alpha-numeric string.
 
 ###duo.conf
 ```
@@ -40,3 +31,5 @@ skey = <your skey>
 akey = <your generated akey>
 host = <your api-hostname>
 ```
+
+The `ikey`, `skey`, and `host` values can be found in the [Duo Admin panel](https://admin.duosecurity.com). Please see the documentation for using the Python [WebSDK](https://duo.com/docs/duoweb) on how to generate a suitable string for the `akey` value.
